@@ -1,4 +1,7 @@
 const express = require("express");
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
 
 // Controllers
 const { globalErrorHandler } = require("./controllers/errorsController");
@@ -18,6 +21,14 @@ const app = express();
 
 //Enable incoming JSON DATA
 app.use(express.json());
+
+// ADD SECURITY HELMET
+app.use(helmet());
+//Compress responses
+app.use(compression());
+//Log incoming requests
+if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
+else app.use(morgan('combined'));
 
 //Enpoints
 app.use("/api/v1/users", usersRouter);
